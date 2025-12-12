@@ -1,0 +1,64 @@
+name: Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '.gitignore'
+      - '**/*/LICENSE.md'
+      - '**/*/README.md'
+      - '**/*/Dockerfile'
+jobs:
+  build:
+    name: Build and push Docker image
+    runs-on: ubuntu-24.04-arm
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Create version tag
+        id: version
+        run:  echo "version=$(date +%Y.%m.%d.%H%M%S)-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Build and push server image
+        run: |
+          TAG=${{ secrets.DOCKERHUB_USERNAME }}/groundsforsupport.stevanfreeborn.com:${{ steps.version.outputs.version }}
+          docker build -t $TAG .
+          docker push $TAG
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Run deploy script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            TAG=${{ secrets.DOCKERHUB_USERNAME }}/groundsforsupport.stevanfreeborn.com:${{ needs.build.outputs.version }}
+
+            docker stop groundsforsupport.stevanfreeborn.com
+            docker rm groundsforsupport.stevanfreeborn.com
+
+            docker pull $TAG
+            docker run \
+              --restart always \
+              -d \
+              -p 4343:8080 \
+              --name groundsforsupport.stevanfreeborn.com \
+              $TAG

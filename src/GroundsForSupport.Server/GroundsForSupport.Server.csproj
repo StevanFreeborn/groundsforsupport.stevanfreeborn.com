@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+  </ItemGroup>
+
+  <Target Name="InstallClientDeps" BeforeTargets="Build">
+    <Message Text="Installing client deps..." Importance="high" />
+    <Exec Command="npm install" WorkingDirectory="../GroundsForSupport.Client" />
+  </Target>
+
+  <Target Name="BuildClient" BeforeTargets="Build">
+    <Message Text="Building client..." Importance="high" />
+    <Exec Command="npm run build" WorkingDirectory="../GroundsForSupport.Client" />
+  </Target>
+
+</Project>
