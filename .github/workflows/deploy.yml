@@ -32,7 +32,7 @@ jobs:
       - name: Build and push server image
         run: |
           TAG=${{ secrets.DOCKERHUB_USERNAME }}/groundsforsupport.stevanfreeborn.com:${{ steps.version.outputs.version }}
-          docker build -t $TAG .
+          docker build -t $TAG src/
           docker push $TAG
   deploy:
     name: Deploy to server
