@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'CaskaydiaCove NFM';
+    src: url('/CaskaydiaCoveNFM-Regular.eot');
+    src: url('/CaskaydiaCoveNFM-Regular.eot?#iefix') format('embedded-opentype'),
+        url('/CaskaydiaCoveNFM-Regular.woff2') format('woff2'),
+        url('/CaskaydiaCoveNFM-Regular.woff') format('woff'),
+        url('/CaskaydiaCoveNFM-Regular.svg#CaskaydiaCoveNFM-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* CSS Reset */
 
 * {
@@ -16,6 +28,9 @@ button {
   border: none;
   outline: none;
   cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 a {
@@ -40,6 +55,23 @@ table {
 /* Base Styles */
 
 :root {
+  --bg-color: #323232;
+  --text-color: #E4E4E4;
+
   font-size: 16px;
+  font-family: 'CaskaydiaCove NFM', monospace;
+  font-size: 16px;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+main {
+  padding: 1rem;
+  padding-top: 2rem;
 }
 
