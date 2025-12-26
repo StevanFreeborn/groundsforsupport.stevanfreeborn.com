@@ -1,11 +1,6 @@
 import '@/App.css';
 import { useRef, useState } from 'react';
 
-// TODO: Maybe be good to require
-// the user provide some sort of
-// identifier so we can display
-// that as part of the feed
-
 function App() {
   const [amount, setAmount] = useState<number | ''>('');
   const [email, setEmail] = useState<string>('');
@@ -15,13 +10,13 @@ function App() {
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   function handleAmountInput(event: React.ChangeEvent<HTMLInputElement>) {
-    errors.amount = undefined;
+    setErrors((prevErrors) => ({ ...prevErrors, amount: undefined }));
     const value = parseInt(event.target.value);
     setAmount(isNaN(value) ? '' : value);
   }
 
   function handleEmailInput(event: React.ChangeEvent<HTMLInputElement>) {
-    errors.email = undefined;
+    setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
     setEmail(event.target.value);
   }
 
@@ -69,8 +64,17 @@ function App() {
   return (
     <>
       <header>
-        <img src="https://github.com/StevanFreeborn.png" alt="Logo" />
-        <p>Some information about me</p>
+        <img
+          src='https://github.com/StevanFreeborn.png'
+          alt='Profile picture of Stevan Freeborn'
+        />
+        <div className='info'>
+          <h1>Stevan Freeborn</h1>
+          <p>
+            I'm a dad of 2 who enjoys drinking coffee, lifting weights, and solving problems with
+            code. You really don't need to buy me a coffee.
+          </p>
+        </div>
       </header>
       <main>
         <form

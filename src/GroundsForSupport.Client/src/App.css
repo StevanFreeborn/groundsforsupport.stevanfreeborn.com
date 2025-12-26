@@ -16,12 +16,22 @@ header img {
   width: 12rem;
 }
 
+header .info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 31.25rem;
+  text-align: center;
+}
+
 form {
   background-color: #181818;
   border-radius: 0.25rem;
   flex-direction: column;
   gap: 0.5rem;
-  width: 22.5rem;
+  width: 100%;
+  max-width: 31.25rem;
   padding: 1rem;
   display: flex;
   box-shadow: 0 4px 8px #0000001a;
