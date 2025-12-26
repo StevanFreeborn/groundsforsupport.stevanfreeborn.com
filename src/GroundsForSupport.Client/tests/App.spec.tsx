@@ -5,12 +5,6 @@ import '@testing-library/jest-dom';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 
 describe('profile info', () => {
-  let user: UserEvent;
-
-  beforeEach(() => {
-    user = userEvent.setup();
-  });
-
   test('it should display a profile image', () => {
     const screen = render(<App />);
     
@@ -29,6 +23,12 @@ describe('profile info', () => {
 });
 
 describe('form', () => {
+  let user: UserEvent;
+
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   test('it should have an amount input', () => {
     const screen = render(<App />);
 
@@ -58,7 +58,7 @@ describe('form', () => {
 
     const submitButton = screen.getByRole('button', { name: 'Buy' });
 
-    await userEvent.click(submitButton);
+    await user.click(submitButton);
 
     const errorMessage = screen.getByText('Please enter a valid amount greater than 0.');
     expect(errorMessage).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('form', () => {
     const amountInput = screen.getByLabelText('Amount');
     const submitButton = screen.getByRole('button', { name: 'Buy' });
 
-    await userEvent.click(submitButton);
+    await user.click(submitButton);
 
     let errorMessage = screen.queryByText('Please enter a valid amount greater than 0.');
     expect(errorMessage).toBeInTheDocument();
@@ -90,8 +90,8 @@ describe('form', () => {
     const amountInput = screen.getByLabelText('Amount');
     const submitButton = screen.getByRole('button', { name: 'Buy' });
 
-    await userEvent.type(amountInput, '10');
-    await userEvent.click(submitButton);
+    await user.type(amountInput, '10');
+    await user.click(submitButton);
 
     expect(windowSpy).toHaveBeenCalledWith('Form is valid! Amount: 10, Email: ');
   });
@@ -103,9 +103,9 @@ describe('form', () => {
     const emailInput = screen.getByLabelText('Email');
     const submitButton = screen.getByRole('button', { name: 'Buy' });
 
-    await userEvent.type(amountInput, '10');
-    await userEvent.type(emailInput, 'invalid-email');
-    await userEvent.click(submitButton);
+    await user.type(amountInput, '10');
+    await user.type(emailInput, 'invalid-email');
+    await user.click(submitButton);
 
     const errorMessage = screen.getByText('Please enter a valid email address.');
     expect(errorMessage).toBeInTheDocument();
@@ -118,15 +118,15 @@ describe('form', () => {
     const emailInput = screen.getByLabelText('Email');
     const submitButton = screen.getByRole('button', { name: 'Buy' });
 
-    await userEvent.type(amountInput, '10');
-    await userEvent.type(emailInput, 'invalid-email');
-    await userEvent.click(submitButton);
+    await user.type(amountInput, '10');
+    await user.type(emailInput, 'invalid-email');
+    await user.click(submitButton);
 
     let errorMessage = screen.queryByText('Please enter a valid email address.');
     expect(errorMessage).toBeInTheDocument();
 
-    await userEvent.clear(emailInput);
-    await userEvent.type(emailInput, 'test@test.com');
+    await user.clear(emailInput);
+    await user.type(emailInput, 'test@test.com');
 
     errorMessage = screen.queryByText('Please enter a valid email address.');
     expect(errorMessage).not.toBeInTheDocument();
