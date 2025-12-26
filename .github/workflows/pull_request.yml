@@ -28,7 +28,7 @@ jobs:
       - name: Install report generator
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
       - name: Print working directory
-        run: pwd
+        run: ls -la
       - name: Restore dependencies
         run: dotnet restore
       - name: Build solution
