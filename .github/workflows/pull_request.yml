@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Setup .NET
-        uses: actions/checkout@v5
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
       - name: Setup Node.js
@@ -34,12 +34,12 @@ jobs:
       - name: Test solution
         run: dotnet test
       - name: Upload server test coverage
-        uses: action/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: server-test-coverage
           path: tests/GroundsForSupport.Server.Tests/TestResults/
       - name: Upload client test coverage
-        uses: action/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: client-test-coverage
           path: src/GroundsForSupport.Client/coverage/
@@ -50,13 +50,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Setup .NET
-        uses: actions/checkout@v5
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build solution
+        run: dotnet build --no-restore
       - name: Format dotnet solution
         run: dotnet format
       - name: Lint and format client
