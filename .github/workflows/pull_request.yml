@@ -27,6 +27,8 @@ jobs:
           node-version: lts/*
       - name: Install report generator
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
+      - name: Print working directory
+        run: pwd
       - name: Restore dependencies
         run: dotnet restore
       - name: Build solution
