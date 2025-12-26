@@ -39,7 +39,7 @@ jobs:
           name: server-test-coverage
           path: tests/GroundsForSupport.Server.Tests/TestResults/
       - name: Upload client test coverage
-        uses: action/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: client-test-coverage
           path: src/GroundsForSupport.Client/coverage/
