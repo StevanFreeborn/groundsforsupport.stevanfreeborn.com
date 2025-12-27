@@ -23,6 +23,11 @@ insert_final_newline = false
 #### .NET Coding Conventions ####
 [*.{cs,vb}]
 
+# Analyzer severity levels
+dotnet_diagnostic.IDE0058.severity = none
+dotnet_diagnostic.IDE0100.severity = none
+dotnet_diagnostic.IDE3000.severity = none
+
 # Organize usings
 dotnet_separate_import_directive_groups = true
 dotnet_sort_system_directives_first = true
