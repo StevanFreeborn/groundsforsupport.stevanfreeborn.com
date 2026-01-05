@@ -2,7 +2,7 @@
 
 Grounds for Support is a full-stack web application designed to facilitate donations ("buying a coffee") using Stripe. It demonstrates a modern integration of a React frontend with an ASP.NET Core backend, handling secure payments, webhooks, and data persistence.
 
-## 🚀 Features
+## Features
 
 - **Secure Donations**: Integrated with Stripe Payment Intents for secure transaction processing.
 - **Custom Amounts**: Users can specify their donation amount, name, and a personal message.
@@ -11,7 +11,7 @@ Grounds for Support is a full-stack web application designed to facilitate donat
 - **Rate Limiting**: API endpoints are protected against abuse.
 - **Responsive Design**: Works seamlessly on desktop and mobile.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
