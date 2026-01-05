@@ -32,7 +32,7 @@ jobs:
       - name: Build and push server image
         run: |
           TAG=${{ secrets.DOCKERHUB_USERNAME }}/groundsforsupport.stevanfreeborn.com:${{ steps.version.outputs.version }}
-          docker build -t $TAG src/
+          docker build --build-arg VITE_STRIPE_API_KEY=${{ secrets.VITE_STRIPE_API_KEY }} -t $TAG src/
           docker push $TAG
   deploy:
     name: Deploy to server
@@ -60,5 +60,9 @@ jobs:
               --restart always \
               -d \
               -p 4343:8080 \
+              -e StripeOptions__ApiKey=${{ secrets.STRIPE_API_KEY }} \
+              -e StripeOptions__EventsWebhookSecret=${{ secrets.STRIPE_EVENTS_WEBHOOK_SECRET }} \ 
+              -e ContextOptions__DatabaseFilePath=/app/data/groundsforsupport.db \
+              -v /home/${{ secrets.SSH_USERNAME }}/groundsforsupport.stevanfreeborn.com/data:/app/data \
               --name groundsforsupport.stevanfreeborn.com \
               $TAG

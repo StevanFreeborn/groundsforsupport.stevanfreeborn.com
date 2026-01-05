@@ -12,6 +12,8 @@ RUN apt-get update && \
 COPY ["GroundsForSupport.Server/GroundsForSupport.Server.csproj", "GroundsForSupport.Server/"]
 RUN dotnet restore "GroundsForSupport.Server/GroundsForSupport.Server.csproj"
 
+ARG VITE_STRIPE_API_KEY
+ENV VITE_STRIPE_API_KEY=$VITE_STRIPE_API_KEY
 COPY . .
 WORKDIR "/src/GroundsForSupport.Server"
 RUN dotnet build "GroundsForSupport.Server.csproj" -c Release -o /app/build
