@@ -6,6 +6,9 @@
 appsettings*.json
 !appsettings.Example.json
 wwwroot/
+*.db
+*.db-shm
+*.db-wal
 
 # dotenv files
 .env

@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GroundsForSupport.Server.Tests", "GroundsForSupport.Server.Tests", "{56565355-472A-D7A5-BBD6-5A9243A600D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroundsForSupport.API.Tests", "tests\GroundsForSupport.Server.Tests\GroundsForSupport.API.Tests.csproj", "{73D83B11-C5BC-4C4B-82BF-2DCEE689EDDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroundsForSupport.Server.Tests", "tests\GroundsForSupport.Server.Tests\GroundsForSupport.Server.Tests.csproj", "{73D83B11-C5BC-4C4B-82BF-2DCEE689EDDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
