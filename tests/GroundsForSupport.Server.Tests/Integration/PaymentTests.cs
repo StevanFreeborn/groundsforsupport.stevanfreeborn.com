@@ -3,6 +3,8 @@ using System.Net.Http.Json;
 
 using GroundsForSupport.API.Tests.Integration.Infra;
 
+[assembly: CaptureConsole]
+
 namespace GroundsForSupport.API.Tests.Integration;
 
 public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
@@ -22,6 +24,8 @@ public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
 
     var response = await client.PostAsJsonAsync("/payments/create-intent", request, TestContext.Current.CancellationToken);
 
+    Console.WriteLine(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+
     response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
   }
 
@@ -37,6 +41,8 @@ public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
     };
 
     var response = await client.PostAsJsonAsync("/payments/create-intent", request, TestContext.Current.CancellationToken);
+
+    Console.WriteLine(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
 
     response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
   }
@@ -54,6 +60,8 @@ public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
     };
 
     var response = await client.PostAsJsonAsync("/payments/create-intent", request, TestContext.Current.CancellationToken);
+
+    Console.WriteLine(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
 
     response.StatusCode.Should().Be(HttpStatusCode.OK);
   }

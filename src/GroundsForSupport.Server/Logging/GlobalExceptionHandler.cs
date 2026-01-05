@@ -19,7 +19,7 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
     {
       Status = StatusCodes.Status500InternalServerError,
       Title = "Server Error",
-      Detail = "An internal error occurred."
+      Detail = exception.Message,
     };
 
     httpContext.Response.StatusCode = problemDetails.Status.Value;
