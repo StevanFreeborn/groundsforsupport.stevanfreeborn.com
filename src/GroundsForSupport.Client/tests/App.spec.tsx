@@ -7,7 +7,7 @@ import userEvent, { type UserEvent } from '@testing-library/user-event';
 describe('profile info', () => {
   test('it should display a profile image', () => {
     const screen = render(<App />);
-    
+
     const profileImage = screen.getByAltText('Profile picture of Stevan Freeborn');
 
     expect(profileImage).toBeInTheDocument();
@@ -26,16 +26,16 @@ describe('form', () => {
   let user: UserEvent;
 
   const mockFetch = vi.fn();
- 
+
   beforeEach(() => {
     user = userEvent.setup();
     vi.stubGlobal('fetch', mockFetch);
 
-    mockFetch.mockImplementation(async (url: URL) => {
+    mockFetch.mockImplementation((url: URL) => {
       if (url.toString().endsWith('/payments/create-intent')) {
         return {
           ok: true,
-          json: async () => ({
+          json: () => ({
             clientSecret: 'test_client_secret',
           }),
         };
@@ -44,7 +44,7 @@ describe('form', () => {
       if (url.toString().endsWith('/payments')) {
         return {
           ok: true,
-          json: async () => ({
+          json: () => ({
             payments: [],
           }),
         };
@@ -118,7 +118,6 @@ describe('form', () => {
 
     await user.type(amountInput, '10');
     await user.click(submitButton);
-
   });
 
   test('it should validate email if provided', async () => {

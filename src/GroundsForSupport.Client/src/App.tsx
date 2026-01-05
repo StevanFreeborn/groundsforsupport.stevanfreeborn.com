@@ -7,7 +7,7 @@ import PaymentForm from './PaymentForm';
 import PaymentConfirmationCard from './PaymentConfirmationCard';
 import PreviousPaymentsList from './PreviousPaymentsList';
 
-const stripe = loadStripe(import.meta.env.VITE_STRIPE_API_KEY);
+const stripe = loadStripe(import.meta.env.VITE_STRIPE_API_KEY as string);
 
 function App() {
   const queryParams = new URLSearchParams(window.location.search);
@@ -44,7 +44,7 @@ function App() {
         return;
       }
 
-      const data = await res.json();
+      const data = await res.json() as { clientSecret: string };
       setSecret(data.clientSecret);
     } catch (err) {
       console.error(err);

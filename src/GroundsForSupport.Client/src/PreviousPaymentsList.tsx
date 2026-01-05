@@ -11,13 +11,13 @@ type PaymentPage = {
 
 type PaymentData =
   | {
-    status: 'loading';
-  }
+      status: 'loading';
+    }
   | { status: 'error'; message: string }
   | {
-    status: 'success';
-    pages: PaymentPage[];
-  };
+      status: 'success';
+      pages: PaymentPage[];
+    };
 
 export default function PreviousPaymentsList() {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
@@ -45,7 +45,7 @@ export default function PreviousPaymentsList() {
           setPaymentData({ status: 'error', message: 'Failed to fetch payments' });
         }
 
-        const data = await res.json();
+        const data = await res.json() as PaymentPage;
 
         setPaymentData({ status: 'success', pages: [data] });
       } catch (err) {
@@ -58,7 +58,7 @@ export default function PreviousPaymentsList() {
       }
     }
 
-    fetchPayments();
+    void fetchPayments();
 
     return () => {
       isMounted = false;
@@ -84,7 +84,7 @@ export default function PreviousPaymentsList() {
         return;
       }
 
-      const data = await res.json();
+      const data = await res.json() as PaymentPage;
 
       setPaymentData({
         status: 'success',
@@ -117,7 +117,7 @@ export default function PreviousPaymentsList() {
             <button
               className='load-more-button'
               type='button'
-              onClick={handleLoadMoreButtonClick}
+              onClick={() => void handleLoadMoreButtonClick()}
               disabled={currentPageNumber >= totalNumberOfPages || isLoadingMore}
             >
               Load More

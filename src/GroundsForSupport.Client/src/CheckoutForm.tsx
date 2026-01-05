@@ -32,7 +32,7 @@ export default function CheckoutForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={e => void handleSubmit(e)}>
       <PaymentElement
         id='payment-element'
         options={{ layout: 'accordion' }}

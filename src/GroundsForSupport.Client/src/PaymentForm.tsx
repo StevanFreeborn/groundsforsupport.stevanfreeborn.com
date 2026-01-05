@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 
 type DonationFormProps = {
-  onValidSubmit: (data: { name: string; amount: number; message?: string; email?: string }) => void;
+  onValidSubmit: (data: { name: string; amount: number; message?: string; email?: string }) => Promise<void> | void;
   isSubmitting?: boolean;
 };
 
@@ -98,12 +98,12 @@ export default function PaymentForm({ onValidSubmit, isSubmitting }: DonationFor
       throw new Error('amount after validation should never be an empty string');
     }
 
-    onValidSubmit({ name, amount, message, email });
+    await onValidSubmit({ name, amount, message, email });
   }
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={e => void handleSubmit(e)}
       noValidate
     >
       <div className='group'>

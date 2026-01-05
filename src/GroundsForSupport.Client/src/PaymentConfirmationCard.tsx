@@ -8,16 +8,16 @@ type PaymentConfirmationCardProps = {
 
 type PaymentIntentData =
   | {
-    status: 'loading';
-  }
+      status: 'loading';
+    }
   | {
-    status: 'loaded';
-    intent: PaymentIntent;
-  }
+      status: 'loaded';
+      intent: PaymentIntent;
+    }
   | {
-    status: 'error';
-    error: string;
-  };
+      status: 'error';
+      error: string;
+    };
 
 export default function PaymentConfirmationCard({ clientSecret }: PaymentConfirmationCardProps) {
   const stripe = useStripe();
@@ -58,7 +58,7 @@ export default function PaymentConfirmationCard({ clientSecret }: PaymentConfirm
       }
     }
 
-    fetchPaymentIntent();
+    void fetchPaymentIntent();
 
     return () => {
       isMounted = false;
