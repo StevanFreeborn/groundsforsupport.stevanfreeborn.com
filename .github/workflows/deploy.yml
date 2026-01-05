@@ -61,7 +61,7 @@ jobs:
               -d \
               -p 4343:8080 \
               -e StripeOptions__ApiKey=${{ secrets.STRIPE_API_KEY }} \
-              -e StripeOptions__EventsWebhookSecret=${{ secrets.STRIPE_EVENTS_WEBHOOK_SECRET }} \ 
+              -e StripeOptions__EventsWebhookSecret=${{ secrets.STRIPE_EVENTS_WEBHOOK_SECRET }} \
               -e ContextOptions__DatabaseFilePath=/app/data/groundsforsupport.db \
               -v /home/${{ secrets.SSH_USERNAME }}/groundsforsupport.stevanfreeborn.com/data:/app/data \
               --name groundsforsupport.stevanfreeborn.com \
