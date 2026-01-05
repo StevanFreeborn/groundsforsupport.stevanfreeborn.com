@@ -1,64 +1,57 @@
 import '@/App.css';
-import { useRef, useState } from 'react';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { useState } from 'react';
+import CheckoutForm from './CheckoutForm';
+import PaymentForm from './PaymentForm';
+import PaymentConfirmationCard from './PaymentConfirmationCard';
+import PreviousPaymentsList from './PreviousPaymentsList';
+
+const stripe = loadStripe(import.meta.env.VITE_STRIPE_API_KEY);
 
 function App() {
-  const [amount, setAmount] = useState<number | ''>('');
-  const [email, setEmail] = useState<string>('');
-  const [errors, setErrors] = useState<{ amount?: string; email?: string }>({});
+  const queryParams = new URLSearchParams(window.location.search);
+  const clientSecretFromUrl = queryParams.get('payment_intent_client_secret');
+  const [secret, setSecret] = useState<string | undefined>(clientSecretFromUrl ?? undefined);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const amountInputRef = useRef<HTMLInputElement>(null);
-  const emailInputRef = useRef<HTMLInputElement>(null);
+  async function handleDonationFormSubmit(formData: {
+    name: string;
+    amount: number;
+    message?: string;
+    email?: string;
+  }) {
+    setIsSubmitting(true);
 
-  function handleAmountInput(event: React.ChangeEvent<HTMLInputElement>) {
-    setErrors((prevErrors) => ({ ...prevErrors, amount: undefined }));
-    const value = parseInt(event.target.value);
-    setAmount(isNaN(value) ? '' : value);
-  }
+    try {
+      const url = new URL('/payments/create-intent', import.meta.url);
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          amount: formData.amount,
+          message: formData.message,
+          email: formData.email,
+        }),
+      });
 
-  function handleEmailInput(event: React.ChangeEvent<HTMLInputElement>) {
-    setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
-    setEmail(event.target.value);
-  }
-
-  function validateForm() {
-    const newErrors: { amount?: string; email?: string } = {};
-
-    if (amount === '' || amount <= 0) {
-      newErrors.amount = 'Please enter a valid amount greater than 0.';
-    }
-
-    if (email.trim() !== '' && emailInputRef.current?.validity.typeMismatch) {
-      newErrors.email = 'Please enter a valid email address.';
-    }
-
-    setErrors(newErrors);
-
-    const isValid = Object.keys(newErrors).length === 0;
-
-    if (isValid === false) {
-      if (newErrors.amount) {
-        amountInputRef.current?.focus();
-      } else if (newErrors.email) {
-        emailInputRef.current?.focus();
+      if (!res.ok) {
+        console.error('Failed to create payment intent');
+        alert('An error occurred while creating the payment. Please try again.');
+        return;
       }
+
+      const data = await res.json();
+      setSecret(data.clientSecret);
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while creating the payment. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    return isValid;
-  }
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const isValid = validateForm();
-
-    if (isValid === false) {
-      return;
-    }
-
-    // TODO: We will stop displaying our form
-    // and we will initialize the stripe embedded
-    // elements and pass along the amount and email
-    alert(`Form is valid! Amount: ${amount}, Email: ${email}`);
   }
 
   return (
@@ -72,49 +65,58 @@ function App() {
           <h1>Stevan Freeborn</h1>
           <p>
             I'm a dad of 2 who enjoys drinking coffee, lifting weights, and solving problems with
-            code. You really don't need to buy me a coffee.
+            code. If you have found my open helpful, consider supporting me with a donation which I
+            will more than likely spend on more coffee!
           </p>
         </div>
       </header>
       <main>
-        <form
-          onSubmit={handleSubmit}
-          noValidate
-        >
-          <div className='group'>
-            <label htmlFor='amount'>Amount</label>
-            <input
-              ref={amountInputRef}
-              id='amount'
-              type='number'
-              min={1}
-              aria-describedby='amountErrorMessage'
-              aria-invalid={errors.amount ? 'true' : 'false'}
-              value={amount}
-              onInput={handleAmountInput}
+        <section className='payment'>
+          {secret === undefined ? (
+            <PaymentForm
+              onValidSubmit={handleDonationFormSubmit}
+              isSubmitting={isSubmitting}
             />
-            <span className='error-message'>{errors.amount}</span>
-          </div>
-          <div className='group'>
-            <label htmlFor='email'>Email</label>
-            <input
-              ref={emailInputRef}
-              id='email'
-              type='email'
-              aria-describedby='emailErrorMessage'
-              aria-invalid={errors.email ? 'true' : 'false'}
-              value={email}
-              onInput={handleEmailInput}
-            />
-            <span
-              id='emailErrorMessage'
-              className='error-message'
+          ) : (
+            <Elements
+              options={{
+                clientSecret: secret,
+                loader: 'auto',
+                appearance: {
+                  theme: 'stripe',
+                  disableAnimations: true,
+                  variables: {
+                    colorBackground: '#181818',
+                    colorPrimary: '#E4E4E4',
+                    colorText: '#E4E4E4',
+                    fontFamily: 'CaskaydiaCove NFM, monospace',
+                    fontSizeBase: '16px',
+                    borderRadius: '0.25rem',
+                    colorDanger: '#ff6b6b',
+                  },
+                  rules: {
+                    '.Label': {
+                      fontWeight: '700',
+                    },
+                    '.Input': {
+                      backgroundColor: '#282828',
+                      border: '1px solid #444',
+                      padding: '0.5rem',
+                    },
+                  },
+                },
+              }}
+              stripe={stripe}
             >
-              {errors.email}
-            </span>
-          </div>
-          <button type='submit'>Buy</button>
-        </form>
+              {clientSecretFromUrl ? (
+                <PaymentConfirmationCard clientSecret={clientSecretFromUrl} />
+              ) : (
+                <CheckoutForm />
+              )}
+            </Elements>
+          )}
+        </section>
+        {clientSecretFromUrl === null ? <PreviousPaymentsList /> : null}
       </main>
     </>
   );

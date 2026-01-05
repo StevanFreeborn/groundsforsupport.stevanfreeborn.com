@@ -20,7 +20,7 @@ public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
       email = string.Empty,
     };
 
-    var response = await client.PostAsJsonAsync("/create-payment-intent", request, TestContext.Current.CancellationToken);
+    var response = await client.PostAsJsonAsync("/payments/create-intent", request, TestContext.Current.CancellationToken);
 
     response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
   }
@@ -36,7 +36,7 @@ public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
       email = "invalid-email",
     };
 
-    var response = await client.PostAsJsonAsync("/create-payment-intent", request, TestContext.Current.CancellationToken);
+    var response = await client.PostAsJsonAsync("/payments/create-intent", request, TestContext.Current.CancellationToken);
 
     response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
   }
@@ -48,11 +48,12 @@ public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
 
     var request = new
     {
+      name = "Test User",
       amount = 5000,
       email = "test@test.com",
     };
 
-    var response = await client.PostAsJsonAsync("/create-payment-intent", request, TestContext.Current.CancellationToken);
+    var response = await client.PostAsJsonAsync("/payments/create-intent", request, TestContext.Current.CancellationToken);
 
     response.StatusCode.Should().Be(HttpStatusCode.OK);
   }
