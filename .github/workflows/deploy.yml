@@ -52,8 +52,8 @@ jobs:
           script: |
             TAG=${{ secrets.DOCKERHUB_USERNAME }}/groundsforsupport.stevanfreeborn.com:${{ needs.build.outputs.version }}
 
-            docker stop groundsforsupport.stevanfreeborn.com
-            docker rm groundsforsupport.stevanfreeborn.com
+            docker stop groundsforsupport.stevanfreeborn.com || true
+            docker rm groundsforsupport.stevanfreeborn.com || true
 
             docker pull $TAG
             docker run \

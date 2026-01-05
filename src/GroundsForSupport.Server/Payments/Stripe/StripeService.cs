@@ -8,10 +8,12 @@ namespace GroundsForSupport.Server.Payments.Stripe;
 
 internal sealed class StripeService(
   IOptions<StripeOptions> options,
-  HttpClient httpClient
+  HttpClient httpClient,
+  ILogger<StripeService> logger
 ) : IStripeService
 {
   private readonly StripeClient _client = new(options.Value.ApiKey, httpClient: new SystemNetHttpClient(httpClient));
+  private readonly ILogger<StripeService> _logger = logger;
 
   public async Task<(bool IsSuccess, Intent Intent)> CreatePaymentIntentAsync(string name, decimal amount, string? message, string? email)
   {
@@ -43,7 +45,7 @@ internal sealed class StripeService(
     }
     catch (Exception)
     {
-      // TODO: Log exception
+      _logger.LogError("Failed to create Stripe payment intent for {Name} with amount {Amount}", name, amount);
       return (false, new Intent(string.Empty));
     }
   }

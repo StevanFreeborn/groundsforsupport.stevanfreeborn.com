@@ -29,9 +29,8 @@ internal static class EventsEndpoint
 
     try
     {
-      var stripeEvent = EventUtility.ParseEvent(json);
       var signatureHeader = httpContext.Request.Headers[StripeSignatureHeader];
-      stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, options.Value.EventsWebhookSecret);
+      var stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, options.Value.EventsWebhookSecret);
 
       if (stripeEvent.Type is not EventTypes.PaymentIntentSucceeded)
       {
@@ -39,8 +38,14 @@ internal static class EventsEndpoint
       }
 
       var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
-      var name = paymentIntent.Metadata[nameof(Payment.Name)];
-      var message = paymentIntent.Metadata[nameof(Payment.Message)];
+
+      var name = paymentIntent.Metadata.TryGetValue(nameof(Payment.Name), out var metaName)
+        ? metaName
+        : "unknown";
+
+      var message = paymentIntent.Metadata.TryGetValue(nameof(Payment.Message), out var metaMessage)
+        ? metaMessage
+        : string.Empty;
 
       var payment = new Payment()
       {

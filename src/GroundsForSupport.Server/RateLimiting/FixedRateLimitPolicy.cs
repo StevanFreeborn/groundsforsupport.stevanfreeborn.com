@@ -11,7 +11,7 @@ internal static class FixedRateLimitPolicy
       partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
       factory: static partition => new FixedWindowRateLimiterOptions
       {
-        PermitLimit = 10,
+        PermitLimit = 100,
         Window = TimeSpan.FromHours(1),
         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
         QueueLimit = 0
