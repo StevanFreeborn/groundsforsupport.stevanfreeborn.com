@@ -65,8 +65,9 @@ function App() {
           <h1>Stevan Freeborn</h1>
           <p>
             I'm a dad of 2 who enjoys drinking coffee, lifting weights, and solving problems with
-            code. If you have found my open helpful, consider supporting me with a donation which I
-            will more than likely spend on more coffee!
+            code. If you have found my work or content helpful and you'd like to support me doing more of
+            it in the future you can make a one-time donation here. More than likely I'll spend it on
+            coffee.
           </p>
         </div>
       </header>
