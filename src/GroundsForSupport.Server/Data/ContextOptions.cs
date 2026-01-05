@@ -4,7 +4,7 @@ namespace GroundsForSupport.Server.Data;
 
 internal sealed record ContextOptions
 {
-  public string DatabaseFilePath { get; init; } = "GroundsForSupport.db";
+  public string DatabaseFilePath { get; init; } = string.Empty;
   public string GetFullyQualifiedDatabasePath()
   {
     return Path.GetFullPath(DatabaseFilePath, AppContext.BaseDirectory);

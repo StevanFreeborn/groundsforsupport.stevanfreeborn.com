@@ -16,6 +16,11 @@
     <PackageReference Include="Stripe.net" Version="50.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
   <Target Name="InstallClientDeps" BeforeTargets="Build">
     <Message Text="Installing client deps..." Importance="high" />
     <Exec Command="npm install" WorkingDirectory="../GroundsForSupport.Client" />

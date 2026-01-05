@@ -16,7 +16,8 @@ internal static class CreatePaymentIntentEndpoint
 
   public static async Task<IResult> CreatePaymentIntentHandler(
     Request request,
-    IStripeService stripeService
+    IStripeService stripeService,
+    CancellationToken cancellationToken
   )
   {
     var validationErrors = request.Validate(new ValidationContext(request));
@@ -32,7 +33,8 @@ internal static class CreatePaymentIntentEndpoint
       request.Name,
       request.Amount,
       request.Message,
-      request.Email
+      request.Email,
+      cancellationToken
     );
 
     if (isSuccess is false)

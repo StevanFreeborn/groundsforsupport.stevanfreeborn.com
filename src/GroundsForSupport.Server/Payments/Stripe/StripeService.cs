@@ -1,5 +1,3 @@
-using GroundsForSupport.Server.Data;
-
 using Microsoft.Extensions.Options;
 
 using Stripe;
@@ -15,7 +13,13 @@ internal sealed class StripeService(
   private readonly StripeClient _client = new(options.Value.ApiKey, httpClient: new SystemNetHttpClient(httpClient));
   private readonly ILogger<StripeService> _logger = logger;
 
-  public async Task<(bool IsSuccess, Intent Intent)> CreatePaymentIntentAsync(string name, decimal amount, string? message, string? email)
+  public async Task<(bool IsSuccess, Intent Intent)> CreatePaymentIntentAsync(
+    string name, 
+    decimal amount, 
+    string? message, 
+    string? email, 
+    CancellationToken cancellationToken = default
+  )
   {
     try
     {
@@ -40,7 +44,7 @@ internal sealed class StripeService(
         createOptions.ReceiptEmail = email;
       }
 
-      var intent = await _client.V1.PaymentIntents.CreateAsync(createOptions);
+      var intent = await _client.V1.PaymentIntents.CreateAsync(createOptions, cancellationToken: cancellationToken);
 
       return (true, new Intent(intent.ClientSecret));
     }

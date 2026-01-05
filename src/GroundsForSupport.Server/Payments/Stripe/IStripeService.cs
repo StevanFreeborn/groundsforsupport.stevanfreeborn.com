@@ -6,6 +6,7 @@ internal interface IStripeService
     string name,
     decimal amount,
     string? message,
-    string? email
+    string? email,
+    CancellationToken cancellationToken = default
   );
 }
