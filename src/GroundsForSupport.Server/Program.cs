@@ -1,6 +1,7 @@
 using System.Text.Json;
 
 using GroundsForSupport.Server.Data;
+using GroundsForSupport.Server.Logging;
 using GroundsForSupport.Server.Payments.Endpoints;
 using GroundsForSupport.Server.Payments.Stripe;
 using GroundsForSupport.Server.RateLimiting;
@@ -13,6 +14,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddValidation();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddHttpClient();
@@ -37,6 +39,8 @@ builder.Services.ConfigureHttpJsonOptions(
 );
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
