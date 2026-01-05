@@ -21,6 +21,7 @@ internal sealed class StripeService(
     {
       var createOptions = new PaymentIntentCreateOptions
       {
+        Description = "Grounds for Support Donation",
         Amount = (long)(amount * 100),
         Currency = "usd",
         AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
