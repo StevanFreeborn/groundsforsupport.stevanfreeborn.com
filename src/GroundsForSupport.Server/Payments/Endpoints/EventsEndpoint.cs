@@ -10,7 +10,7 @@ namespace GroundsForSupport.Server.Payments.Endpoints;
 
 internal static class EventsEndpoint
 {
-  private const string Route = "/events";
+  private const string Route = "/payments/events";
   private const string StripeSignatureHeader = "Stripe-Signature";
 
   internal static IEndpointConventionBuilder MapEventsEndpoint(this WebApplication app)
