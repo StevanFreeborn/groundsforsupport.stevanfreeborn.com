@@ -65,7 +65,8 @@ form label {
   font-weight: 700;
 }
 
-form label .detail {
+form label .detail,
+form .email-label .detail {
   font-size: 0.875rem;
   color: #ccc;
 }
