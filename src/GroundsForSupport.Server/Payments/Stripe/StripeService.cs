@@ -14,10 +14,10 @@ internal sealed class StripeService(
   private readonly ILogger<StripeService> _logger = logger;
 
   public async Task<(bool IsSuccess, Intent Intent)> CreatePaymentIntentAsync(
-    string name, 
-    decimal amount, 
-    string? message, 
-    string? email, 
+    string name,
+    decimal amount,
+    string? message,
+    string? email,
     CancellationToken cancellationToken = default
   )
   {

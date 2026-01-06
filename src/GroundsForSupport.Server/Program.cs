@@ -5,6 +5,7 @@ using GroundsForSupport.Server.Logging;
 using GroundsForSupport.Server.Payments.Endpoints;
 using GroundsForSupport.Server.Payments.Stripe;
 using GroundsForSupport.Server.RateLimiting;
+using GroundsForSupport.Server.TextToSpeech;
 
 using Microsoft.AspNetCore.HttpOverrides;
 
@@ -33,6 +34,9 @@ builder.Services.AddHostedService<MigrationService>();
 
 builder.Services.ConfigureOptions<StripeOptionsSetup>();
 builder.Services.AddSingleton<IStripeService, StripeService>();
+
+builder.Services.ConfigureOptions<StreamerBotOptionsSetup>();
+builder.Services.AddSingleton<IStreamerBotService, StreamerBotService>();
 
 builder.Services.ConfigureHttpJsonOptions(
   static options => options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase

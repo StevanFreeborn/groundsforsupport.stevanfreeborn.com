@@ -1,5 +1,6 @@
 using GroundsForSupport.Server.Data;
 using GroundsForSupport.Server.Payments.Stripe;
+using GroundsForSupport.Server.TextToSpeech;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -22,7 +23,8 @@ internal static class EventsEndpoint
     HttpContext httpContext,
     [FromServices] IOptions<StripeOptions> options,
     [FromServices] Context dbContext,
-    [FromServices] TimeProvider timeProvider
+    [FromServices] TimeProvider timeProvider,
+    [FromServices] IStreamerBotService streamerBotService
   )
   {
     var json = await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
@@ -58,6 +60,12 @@ internal static class EventsEndpoint
 
       dbContext.Payments.Add(payment);
       await dbContext.SaveChangesAsync();
+
+      await streamerBotService.TriggerTextToSpeechAsync(
+        name,
+        paymentIntent.AmountReceived,
+        message
+      );
 
       return Results.Ok();
     }
