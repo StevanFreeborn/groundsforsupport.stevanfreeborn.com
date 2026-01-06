@@ -69,7 +69,7 @@ public sealed class PaymentTests(TestApi api) : IClassFixture<TestApi>
         )
       )
       .ReturnsAsync((true, new Intent("pi_12345_secret_67890")));
-    
+
     var api = _api.WithWebHostBuilder(
       b => b.ConfigureTestServices(
         s => s.AddSingleton(mockStripeService.Object)

@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
+using System.Text;
+using System.Text.Json;
+
 using GroundsForSupport.Server.Data;
 using GroundsForSupport.Server.Payments.Stripe;
 
-using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
-using System.Text;
 
 namespace GroundsForSupport.Server.Tests.Integration.Infra;
 
@@ -25,7 +26,7 @@ public sealed class TestApi : WebApplicationFactory<Program>
 
     var contextOptionsJson = JsonSerializer.Serialize(contextOptions);
     var stripeOptionsJson = JsonSerializer.Serialize(stripeOptions);
-    
+
     var configJson = $@"{{
       ""{nameof(ContextOptions)}"": {contextOptionsJson},
       ""{nameof(StripeOptions)}"": {stripeOptionsJson}

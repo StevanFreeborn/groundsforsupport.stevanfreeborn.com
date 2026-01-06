@@ -60,6 +60,10 @@ jobs:
               --restart always \
               -d \
               -p 4343:8080 \
+              -e StreamerBotOptions__Host=${{ secrets.STREAMER_BOT_HOST }} \
+              -e StreamerBotOptions__Post=${{ secrets.STREAMER_BOT_PORT }} \
+              -e StreamerBotOptions__ApiKey=${{ secrets.STREAMER_BOT_API_KEY }} \
+              -e StreamerBotOptions__TextToSpeechActionId=${{ secrets.STREAMER_BOT_ACTION_ID }} \
               -e StripeOptions__ApiKey=${{ secrets.STRIPE_API_KEY }} \
               -e StripeOptions__EventsWebhookSecret=${{ secrets.STRIPE_EVENTS_WEBHOOK_SECRET }} \
               -e ContextOptions__DatabaseFilePath=/app/data/groundsforsupport.db \
