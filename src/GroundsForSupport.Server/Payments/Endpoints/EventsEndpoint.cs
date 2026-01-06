@@ -24,7 +24,8 @@ internal static class EventsEndpoint
     [FromServices] IOptions<StripeOptions> options,
     [FromServices] Context dbContext,
     [FromServices] TimeProvider timeProvider,
-    [FromServices] IStreamerBotService streamerBotService
+    [FromServices] IStreamerBotService streamerBotService,
+    [FromServices] ILogger<Program> logger
   )
   {
     var json = await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
@@ -61,11 +62,18 @@ internal static class EventsEndpoint
       dbContext.Payments.Add(payment);
       await dbContext.SaveChangesAsync();
 
-      await streamerBotService.TriggerTextToSpeechAsync(
-        name,
-        paymentIntent.AmountReceived,
-        message
-      );
+      try
+      {
+        await streamerBotService.TriggerTextToSpeechAsync(
+          name,
+          paymentIntent.AmountReceived,
+          message
+        );
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "Failed to trigger text-to-speech for payment {PaymentId}", paymentIntent.Id);
+      }
 
       return Results.Ok();
     }
