@@ -6,17 +6,17 @@ namespace GroundsForSupport.Server.TextToSpeech;
 
 internal sealed class StreamerBotService(
   IHttpClientFactory httpClientFactory,
-  IOptions<StreamerBotOptions> options
+  IOptionsMonitor<StreamerBotOptions> options
 ) : IStreamerBotService
 {
   private const string DoActionEndpoint = "/DoAction";
   private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
-  private readonly StreamerBotOptions _options = options.Value;
+  private readonly IOptionsMonitor<StreamerBotOptions> _options = options;
 
   public Task TriggerTextToSpeechAsync(string name, long amount, string message, CancellationToken cancellationToken = default)
   {
     var client = _httpClientFactory.CreateClient();
-    var url = new UriBuilder(_options.GetBaseUrl())
+    var url = new UriBuilder(_options.CurrentValue.GetBaseUrl())
     {
       Path = DoActionEndpoint
     }.Uri;
@@ -27,14 +27,14 @@ internal sealed class StreamerBotService(
     {
       action = new
       {
-        id = _options.TextToSpeechActionId
+        id = _options.CurrentValue.TextToSpeechActionId
       },
       args = new
       {
         name,
         amount = $"${amount / 100.0:F2}",
         message,
-        apiKey = _options.ApiKey
+        apiKey = _options.CurrentValue.ApiKey
       }
     };
 
