@@ -3,6 +3,7 @@ using GroundsForSupport.Server.Payments.Stripe;
 using GroundsForSupport.Server.TextToSpeech;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 using Stripe;
@@ -25,10 +26,11 @@ internal static class EventsEndpoint
     [FromServices] Context dbContext,
     [FromServices] TimeProvider timeProvider,
     [FromServices] IStreamerBotService streamerBotService,
-    [FromServices] ILogger<Program> logger
+    [FromServices] ILogger<Program> logger,
+    CancellationToken ct
   )
   {
-    var json = await new StreamReader(httpContext.Request.Body).ReadToEndAsync();
+    var json = await new StreamReader(httpContext.Request.Body).ReadToEndAsync(ct);
 
     try
     {
@@ -50,6 +52,15 @@ internal static class EventsEndpoint
         ? metaMessage
         : string.Empty;
 
+      var existingPayment = await dbContext.Payments
+        .FirstOrDefaultAsync(p => p.Id == paymentIntent.Id, ct);
+
+      if (existingPayment is not null)
+      {
+        logger.LogWarning("Payment with ID {PaymentId} already exists. Skipping.", paymentIntent.Id);
+        return Results.Ok();
+      }
+
       var payment = new Payment()
       {
         Id = paymentIntent.Id,
@@ -59,15 +70,16 @@ internal static class EventsEndpoint
         CreatedAtUnix = timeProvider.GetUtcNow().ToUnixTimeMilliseconds(),
       };
 
-      dbContext.Payments.Add(payment);
-      await dbContext.SaveChangesAsync();
+      await dbContext.Payments.AddAsync(payment, ct);
+      await dbContext.SaveChangesAsync(ct);
 
       try
       {
         await streamerBotService.TriggerTextToSpeechAsync(
           name,
           paymentIntent.AmountReceived,
-          message
+          message,
+          ct
         );
       }
       catch (Exception ex)
